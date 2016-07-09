@@ -50,14 +50,15 @@ def calculate_median(g):
     degree_list = g.degree()
     n = len(degree_list)
     if n % 2 == 1:
-        med = float(nth(degree_list, n/2))
+        med = float(quickselect(degree_list, n/2))
     else:
-        med = float(nth(degree_list, n/2-1) + float(nth(degree_list, n/2)))/2
+        med = float(quickselect(degree_list, n/2-1) + float(quickselect(degree_list, n/2)))/2
     med = truncate(med, 2)
     return med
 
 
-def nth(arr, n):
+# Select nth greatest number, referenced from online source
+def quickselect(arr, n):
     pivot = arr[0]
     below = [x for x in arr if x < pivot]
     above = [x for x in arr if x > pivot]
@@ -66,9 +67,9 @@ def nth(arr, n):
     num_lessoreq = len(arr) - len(above)
 
     if n < num_less:
-        return nth(below, n)
+        return quickselect(below, n)
     elif n >= num_lessoreq:
-        return nth(above, n-num_lessoreq)
+        return quickselect(above, n-num_lessoreq)
     else:
         return pivot
 
@@ -88,7 +89,7 @@ if __name__ == "__main__":
     out_filename = sys.argv[2]
 
     # in_filename = '../venmo_input/venmo-trans.txt'
-    # out_filename = '../venmo_output/output.txt'
+    # out_filename = '../venmo_output/output2.txt'
     file_out = open(out_filename, 'a')
 
     with open(in_filename) as data_file:

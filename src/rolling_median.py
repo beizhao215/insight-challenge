@@ -85,11 +85,11 @@ if __name__ == "__main__":
     latest_time_dt = dt.fromtimestamp(mktime(latest_time))
 
     # Define path for input and output.txt files.
-    # in_filename = sys.argv[1]
-    # out_filename = sys.argv[2]
+    in_filename = sys.argv[1]
+    out_filename = sys.argv[2]
 
-    in_filename = '../venmo_input/venmo-trans.txt'
-    out_filename = '../venmo_output/output2.txt'
+    # in_filename = '../venmo_input/venmo-trans.txt'
+    # out_filename = '../venmo_output/output2.txt'
     file_out = open(out_filename, 'a')
 
     with open(in_filename) as data_file:
