@@ -110,11 +110,11 @@ if __name__ == "__main__":
 
             # check time range
             # if older than 1 minute of latest payment, do nothing to the graph
-            if payment_time_dt < latest_time_dt - datetime.timedelta(minutes=1):
+            if payment_time_dt <= latest_time_dt - datetime.timedelta(minutes=1):
                 pass
 
             # if fall into the 1 minute window, add the persons
-            elif latest_time_dt >= payment_time_dt >= latest_time_dt - datetime.timedelta(minutes=1):
+            elif latest_time_dt >= payment_time_dt > latest_time_dt - datetime.timedelta(minutes=1):
                 if persons_are_valid:
                     add_persons(persons, payment_time_dt)
 
@@ -129,12 +129,17 @@ if __name__ == "__main__":
                 del_names = []
                 # iterate through the vertices, delete the ones that's older than 1 minutes of this tweet
                 for each_vertex in vs:
-                    if each_vertex['modified_time'] < latest_time_dt - datetime.timedelta(minutes=1):
+                    if each_vertex['modified_time'] <= latest_time_dt - datetime.timedelta(minutes=1):
                         del_names.append(each_vertex['name'])
 
                 for v_name in del_names:
                     to_be_del_vs = g.vs.find(name=v_name)
                     g.delete_vertices(to_be_del_vs)
+
+                es = EdgeSeq(g)
+                for each_edge in es:
+                    if each_edge['modified_time'] <= latest_time_dt - datetime.timedelta(minutes=1):
+                        g.delete_edges(each_edge)
 
                 if persons_are_valid:
                     add_persons(persons, payment_time_dt)
@@ -147,6 +152,8 @@ if __name__ == "__main__":
                 file_out.write('\n')
             else:
                 median = calculate_median(g)
+                #file_out.write(str(sorted(g.degree())))
+
                 file_out.write(str(median))
                 file_out.write('\n')
 
