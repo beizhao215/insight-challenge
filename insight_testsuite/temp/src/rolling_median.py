@@ -98,11 +98,14 @@ if __name__ == "__main__":
             payment = json.loads(line)
 
             # filter out the lines that are invalid payment
-            if 'actor' not in payment or 'target' not in payment:
+            if 'actor' not in payment or 'target' not in payment or 'created_time' not in payment:
                 continue
 
             # get create_time of the payment
-            payment_time = time.strptime(payment['created_time'], "%Y-%m-%dT%H:%M:%SZ")
+            try:
+                payment_time = time.strptime(payment['created_time'], "%Y-%m-%dT%H:%M:%SZ")
+            except:
+                continue
             payment_time_dt = dt.fromtimestamp(mktime(payment_time))
 
             persons = [payment['actor'], payment['target']]
@@ -117,6 +120,8 @@ if __name__ == "__main__":
             elif latest_time_dt >= payment_time_dt > latest_time_dt - datetime.timedelta(minutes=1):
                 if persons_are_valid:
                     add_persons(persons, payment_time_dt)
+                else:
+                    continue
 
             # if the payment is the newest
             else:
@@ -143,6 +148,8 @@ if __name__ == "__main__":
 
                 if persons_are_valid:
                     add_persons(persons, payment_time_dt)
+                else:
+                    continue
 
             num_vertices = float(g.vcount())
 
@@ -152,12 +159,11 @@ if __name__ == "__main__":
                 file_out.write('\n')
             else:
                 median = calculate_median(g)
-                #file_out.write(str(sorted(g.degree())))
 
                 file_out.write(str(median))
                 file_out.write('\n')
 
 file_out.close()
 
-print("--- %s seconds ---" % (time.time() - start_time))   # 0.32 second
+print("--- %s seconds ---" % (time.time() - start_time))   # 0.38 second
 
